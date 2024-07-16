@@ -25,7 +25,7 @@ actor Token{
     };
 
     public shared (msg) func payOut() : async Text {
-        // Debug.print(debug_show(msg.caller));
+         Debug.print(debug_show(msg.caller));
         if(balances.get(msg.caller) == null){
              let amount = 10000;
              balances.put(msg.caller, amount);
@@ -34,5 +34,23 @@ actor Token{
             return "You have already claimed your reward";
         }
        
-    }
+    };
+
+    public shared (msg) func transfer(to: Principal, amount: Nat): async Text{
+        let fromBalance = await balanceOf(msg.caller);
+        if(fromBalance > amount){
+            let newFromBalance: Nat = fromBalance - amount;
+            balances.put(msg.caller, newFromBalance);
+
+            let toBalance = await balanceOf(to);
+            let newToBalance = toBalance + amount;
+            balances.put(to, newToBalance);
+
+            return "Success";
+        }else{
+            return "Insufficient Funds"
+        }
+
+        
+    };
 };
