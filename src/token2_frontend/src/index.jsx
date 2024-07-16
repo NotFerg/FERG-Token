@@ -18,9 +18,13 @@ const init = async () => {
   }
 
   async function handleAuthenticated(authClient){
+    console.log(authClient.getIdentity());
+    const identity = await authClient.getIdentity();
+    const userPrincipal = identity._principal.toString();
+    console.log(userPrincipal);
     ReactDOM.createRoot(document.getElementById('root')).render(
       <React.StrictMode>
-        <App />
+        <App loggedInPrincipal={userPrincipal}/>
       </React.StrictMode>,
     );
     
