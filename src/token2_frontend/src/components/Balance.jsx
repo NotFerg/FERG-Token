@@ -1,9 +1,23 @@
-import React from "react";
+import React,{useState} from "react";
+import { Principal} from "@dfinity/principal";
+import {token2_backend} from "../../../declarations/token2_backend";
+
 
 function Balance() {
+
+  const [inputValue,setInputValue] = useState("");
+  const [balanceResult,setBalanceResult] = useState("");
+  const [symb,setSymb] = useState("");
+  const [isHiddden,setIsHidden] = useState(true);
   
   async function handleClick() {
-    console.log("Balance Button Clicked");
+    // console.log("Balance Button Clicked");
+    const principal = Principal.fromText(inputValue);
+    const balance = await token2_backend.balanceOf(principal);
+    setBalanceResult(balance.toLocaleString());
+    const symbol = await token2_backend.getSymbol();
+    setSymb(symbol);
+    setIsHidden(false);
   }
 
 
@@ -15,6 +29,8 @@ function Balance() {
           id="balance-principal-id"
           type="text"
           placeholder="Enter a Principal ID"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
         />
       </p>
       <p className="trade-buttons">
@@ -25,7 +41,7 @@ function Balance() {
           Check Balance
         </button>
       </p>
-      <p>This account has a balance of XYZ.</p>
+      <p hidden={isHiddden}>This account has a balance of {balanceResult} {symb}.</p>
     </div>
   );
 }
