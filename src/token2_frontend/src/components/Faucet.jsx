@@ -1,26 +1,15 @@
 import React, { useState } from "react";
-import { token2_backend, canisterId, createActor } from "../../../declarations/token2_backend";
-import {AuthClient} from "@dfinity/auth-client"
+import { token2_backend } from "../../../declarations/token2_backend";
 
 function Faucet(props) {
-  const [isDisabled, setDisabled] = useState(false);
-  const [buttonText,setButtonText] = useState("Gimme gimme");
+  const [isDisabled, setDisable] = useState(false);
+  const [buttonText, setText] = useState("Gimme gimme");
 
   async function handleClick(event) {
-    setDisabled(true);
-
-    const authClient  = await AuthClient.create();
-    const identity = await authClient.getIdentity();
-
-    const authenticatedCanister = createActor(canisterId,{
-      agentOptions:{
-        identity,
-      },
-    });
-
-    const result = await authenticatedCanister.payOut();
-    setButtonText(result);
-    //setDisabled(false);
+    setDisable(true);
+    const result = await token2_backend.payOut();
+    console.log("payout: " + result);
+    setText(result);
   }
 
   return (
@@ -32,8 +21,7 @@ function Faucet(props) {
         Faucet
       </h2>
       <label>
-        Get your free FERG tokens here! Claim 10,000 FERG tokens to your
-        {props.userPrincipal}.
+        Get your free DAngela token2_backends here! Claim 10,000 DANG token2_backends to 2vxsx-fae
       </label>
       <p className="trade-buttons">
         <button id="btn-payout" onClick={handleClick} disabled={isDisabled}>
